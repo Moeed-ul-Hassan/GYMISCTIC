@@ -1,0 +1,151 @@
+GYMistic — Final Feature List (2025 Edition)
+Offline Islamic Fitness App for Body, Mind & Soul
+Built by Moeed Mirza — Powered by Faith and Function
+
+🧱 1. Offline-First Architecture
+Sab data IndexedDB mein securely stored
+
+Fully usable without internet
+
+No login/signup required
+
+💪 2. Smart Workout & Rep Tracker
+Manual & Motion-based rep logging
+
+Voice motivational feedback on reps (“Come on... 7... You got this!”)
+
+Auto session summaries
+
+📆 3. 7-Day Dynamic Workout Planner
+User ke available days ke basis pe plan
+
+Suggests splits: Push/Pull, Bro Split, Full Body
+
+Includes rest day logic
+
+🧠 4. Mental Fitness & Mood Check
+Daily mood log (😊 😐 😓 😡)
+
+Breathing timer (4-4-4 technique)
+
+Optional dhikr reminders
+
+Islamic motivational quotes based on mood
+
+📖 5. Daily Islamic Quotes
+Voice of a “gym bro with Imaan”
+
+Quotes in Roman Urdu + Translations
+
+Categorized: Nafs, Sabr, Rizq, Effort, Shukar, Strength
+
+Local JSON driven
+
+🕋 6. Spiritual Nasheed Player
+Voice-only nasheeds (Mahdi Rasooli style)
+
+Stored locally (/assets/audio/*.mp3)
+
+Shuffle, Repeat, Play in Background
+
+Categories: Emotional, Strength, Patience, Motivation
+
+Optional: Gym Start = Nasheed auto play
+
+🔥 7. Calorie Calculator (Islamic Diet Goals)
+BMR + TDEE using Mifflin-St Jeor
+
+Suggest calories based on Cut / Bulk / Maintain
+
+PKR-budget-based meals integration
+
+Daily Calorie Balance ring
+
+Motivational alerts: “Tu rozi ka nahi — niyat ka mohtaaj hai”
+
+🍲 8. Budget-Based Meal Planner
+Monthly budget input in PKR
+
+Suggests balanced meals (Anda, Daal, Chawal, Roti, Dahi)
+
+3-time meals + Snacks suggestion
+
+Rotating weekly menu
+
+Grocery list exportable
+
+📊 9. Body Stats Tracker
+Weight, Chest, Waist, Arms
+
+Graphs of growth/change
+
+Monthly check reminder
+
+BMI & Fat% Optional
+
+🔐 10. Local Data Export / Import
+One-click JSON export
+
+Backup + restore on any device
+
+Encrypted storage via crypto-js
+
+🎧 11. Motivational Audio Alerts (Future)
+Short motivational clips after set completion
+
+Toggle in settings
+
+Audio examples:
+
+“Ab thakan nahi — rooh jagani hai!”
+
+“1 rep Allah ke liye bhi ho sakti hai”
+
+📶 12. Creative Preloader + Splash
+Dumbbell animation
+
+Terminal-style “Loading Gains…”
+
+Moeed Mirza branding + Zylox 2025
+
+📱 13. Clean, Neon UI
+Tailwind + Dark Mode
+
+Neon green, blue, purple (GYMistic color palette)
+
+Rounded, modern design
+
+Framer Motion transitions
+
+🎯 14. Smart Daily Tips
+Stored JSON tips
+
+Shown after each session or on app open
+
+Example:
+
+“Anda aur dahi ki jo pairing hai, wo protein + gut dono repair karti hai.”
+
+🧾 15. Developer Notes Section
+Weekly Moeed ka message:
+
+“Tu mehnat kar. Rest Allah pe chor.”
+
+Small corner branding: “Built with 💪 by Moeed Mirza”
+
+🚀 Coming Soon (Stretch Goals):
+Feature	Status
+📡 Service Worker Sync	Later
+🤝 Friend Mode (P2P sharing)	Idea
+🪙 Daily Coins for Workout	Later
+🎨 Nasheed Poster Generator	Optional
+🧪 Blood Pressure + HR tracking	Device link idea
+
+🔑 Unique Value Proposition
+Islamic + Desi + Offline
+
+No SaaS cost
+
+Faith + Focus in one app
+
+No spam, no ads, no music
