@@ -1,0 +1,74 @@
+{
+  "tips": [
+    {
+      "id": "1",
+      "text": "Anda aur dahi ki jo pairing hai, wo protein + gut dono repair karti hai.",
+      "category": "nutrition",
+      "type": "daily_tip"
+    },
+    {
+      "id": "2", 
+      "text": "Workout ke baad 30 minute ka window hai - us waqt protein zaroor lo.",
+      "category": "workout",
+      "type": "daily_tip"
+    },
+    {
+      "id": "3",
+      "text": "Raat ka khana 2 ghante pehle finish karo. Digestion aur sleep dono better hongi.",
+      "category": "nutrition",
+      "type": "daily_tip"
+    },
+    {
+      "id": "4",
+      "text": "Progressive overload ka matlab ye hai - har hafte thoda sa weight ya reps badhao.",
+      "category": "workout", 
+      "type": "daily_tip"
+    },
+    {
+      "id": "5",
+      "text": "Sabr aur consistency hi asli game changer hai. Rome ek din mein nahi bana.",
+      "category": "motivation",
+      "type": "daily_tip"
+    },
+    {
+      "id": "6",
+      "text": "Paani kam peene se metabolism slow ho jata hai. Din mein 8-10 glass zaroor piyo.",
+      "category": "nutrition",
+      "type": "daily_tip"
+    },
+    {
+      "id": "7",
+      "text": "Compound exercises jaise squats aur deadlifts se zyada muscles ek saath kaam karti hain.",
+      "category": "workout",
+      "type": "daily_tip"
+    },
+    {
+      "id": "8",
+      "text": "Sleep kam hogi to gains kam honge. 7-8 ghante ki neend zarroori hai.",
+      "category": "recovery",
+      "type": "daily_tip"
+    }
+  ],
+  "weeklyMessages": [
+    {
+      "week": 1,
+      "message": "Tu mehnat kar. Taqdeer ka rona chhod. Allah se umeed rakh aur body banane mein consistency dikhao.",
+      "author": "Moeed Mirza"
+    },
+    {
+      "week": 2,
+      "message": "Har rep Allah ke naam pe karo. Jab intention sahi hogi, to results bhi blessed honge.",
+      "author": "Moeed Mirza"
+    },
+    {
+      "week": 3,
+      "message": "Nafs ko control karna gym se mushkil hai. Lekin dono mein mehnat lagi hai bhai.",
+      "author": "Moeed Mirza"
+    },
+    {
+      "week": 4,
+      "message": "Budget tight hai to creativity badhao. Daal-chawal mein bhi protein aur energy mil sakti hai.",
+      "author": "Moeed Mirza"
+    }
+  ]
+}

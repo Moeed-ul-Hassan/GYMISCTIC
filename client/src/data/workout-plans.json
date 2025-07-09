@@ -1,0 +1,156 @@
+{
+  "plans": [
+    {
+      "id": "push_pull_legs",
+      "name": "Push Pull Legs",
+      "type": "push_pull_legs",
+      "daysPerWeek": 6,
+      "description": "Classic 6-day split focusing on push muscles, pull muscles, and legs",
+      "schedule": [
+        {
+          "day": 1,
+          "workoutType": "push",
+          "name": "Push Day",
+          "exercises": ["push_ups", "bench_press", "shoulder_press", "tricep_dips", "lateral_raises"]
+        },
+        {
+          "day": 2,
+          "workoutType": "pull",
+          "name": "Pull Day", 
+          "exercises": ["pull_ups", "rows", "lat_pulldowns", "bicep_curls", "face_pulls"]
+        },
+        {
+          "day": 3,
+          "workoutType": "legs",
+          "name": "Leg Day",
+          "exercises": ["squats", "deadlifts", "lunges", "calf_raises", "leg_press"]
+        },
+        {
+          "day": 4,
+          "workoutType": "push",
+          "name": "Push Day",
+          "exercises": ["incline_push_ups", "dumbbell_press", "arnold_press", "diamond_push_ups", "front_raises"]
+        },
+        {
+          "day": 5,
+          "workoutType": "pull", 
+          "name": "Pull Day",
+          "exercises": ["chin_ups", "reverse_rows", "hammer_curls", "shrugs", "reverse_flies"]
+        },
+        {
+          "day": 6,
+          "workoutType": "legs",
+          "name": "Leg Day",
+          "exercises": ["goblet_squats", "romanian_deadlifts", "bulgarian_split_squats", "wall_sits", "single_leg_calf_raises"]
+        }
+      ]
+    },
+    {
+      "id": "bro_split",
+      "name": "Bro Split",
+      "type": "bro_split", 
+      "daysPerWeek": 5,
+      "description": "Traditional bodybuilding split targeting one muscle group per day",
+      "schedule": [
+        {
+          "day": 1,
+          "workoutType": "chest",
+          "name": "Chest Day",
+          "exercises": ["push_ups", "bench_press", "incline_press", "chest_flies", "dips"]
+        },
+        {
+          "day": 2,
+          "workoutType": "back",
+          "name": "Back Day",
+          "exercises": ["pull_ups", "rows", "lat_pulldowns", "deadlifts", "reverse_flies"]
+        },
+        {
+          "day": 3,
+          "workoutType": "shoulders",
+          "name": "Shoulder Day",
+          "exercises": ["shoulder_press", "lateral_raises", "front_raises", "rear_delt_flies", "upright_rows"]
+        },
+        {
+          "day": 4,
+          "workoutType": "arms",
+          "name": "Arms Day",
+          "exercises": ["bicep_curls", "tricep_dips", "hammer_curls", "tricep_extensions", "close_grip_push_ups"]
+        },
+        {
+          "day": 5,
+          "workoutType": "legs",
+          "name": "Leg Day",
+          "exercises": ["squats", "deadlifts", "lunges", "calf_raises", "leg_press"]
+        }
+      ]
+    },
+    {
+      "id": "full_body",
+      "name": "Full Body",
+      "type": "full_body",
+      "daysPerWeek": 3,
+      "description": "Complete body workout 3 times per week",
+      "schedule": [
+        {
+          "day": 1,
+          "workoutType": "full_body_a",
+          "name": "Full Body A",
+          "exercises": ["squats", "push_ups", "rows", "shoulder_press", "planks"]
+        },
+        {
+          "day": 3,
+          "workoutType": "full_body_b", 
+          "name": "Full Body B",
+          "exercises": ["deadlifts", "incline_push_ups", "pull_ups", "lunges", "bicep_curls"]
+        },
+        {
+          "day": 5,
+          "workoutType": "full_body_c",
+          "name": "Full Body C", 
+          "exercises": ["goblet_squats", "dips", "lat_pulldowns", "lateral_raises", "tricep_extensions"]
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "push_ups",
+      "name": "Push-ups",
+      "category": "chest",
+      "muscleGroups": ["chest", "shoulders", "triceps"],
+      "equipment": ["bodyweight"],
+      "instructions": [
+        "Start in a plank position with hands slightly wider than shoulders",
+        "Lower your body until chest nearly touches the floor",
+        "Push back up to starting position",
+        "Keep your body in a straight line throughout"
+      ]
+    },
+    {
+      "id": "squats",
+      "name": "Squats",
+      "category": "legs",
+      "muscleGroups": ["quadriceps", "glutes", "hamstrings"],
+      "equipment": ["bodyweight"],
+      "instructions": [
+        "Stand with feet shoulder-width apart",
+        "Lower your body as if sitting back into a chair",
+        "Keep your chest up and knees behind toes",
+        "Return to starting position"
+      ]
+    },
+    {
+      "id": "pull_ups",
+      "name": "Pull-ups",
+      "category": "back",
+      "muscleGroups": ["lats", "rhomboids", "biceps"],
+      "equipment": ["pull_up_bar"],
+      "instructions": [
+        "Hang from a pull-up bar with palms facing away",
+        "Pull your body up until chin clears the bar",
+        "Lower yourself back down with control",
+        "Keep your core engaged throughout"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "quotes": [
+    {
+      "id": "1",
+      "text": "Allah ki madad sirf unke saath hai jo mehnat karte hain.",
+      "translation": "Allah's help is only with those who work hard.",
+      "category": "effort",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "2", 
+      "text": "Sabr ka phal meetha hota hai.",
+      "translation": "The fruit of patience is sweet.",
+      "category": "sabr",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "3",
+      "text": "Tu rozi ka nahi, niyat ka mohtaaj hai.",
+      "translation": "You are not in need of sustenance, but of pure intention.",
+      "category": "rizq",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "4",
+      "text": "Nafs ko control karna asli jihad hai.",
+      "translation": "Controlling the nafs (desires) is the real jihad.",
+      "category": "nafs",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "5",
+      "text": "Jitna Allah pe bharosa, utni hi taqat milti hai.",
+      "translation": "The more you trust in Allah, the more strength you receive.",
+      "category": "strength",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "6",
+      "text": "Shukar karne se barkat badhti hai.",
+      "translation": "Gratitude increases blessings.",
+      "category": "shukar",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "7",
+      "text": "Mehnat kar, taqdeer ka rona chhod.",
+      "translation": "Work hard, stop complaining about destiny.",
+      "category": "effort",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "8",
+      "text": "Kamzor nafs strong body se zyada khatarnak hai.",
+      "translation": "A weak soul is more dangerous than a weak body.",
+      "category": "nafs",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "9",
+      "text": "Allah par tawakkul kar aur apna kaam kar.",
+      "translation": "Trust in Allah and do your work.",
+      "category": "effort",
+      "source": "Islamic Teaching"
+    },
+    {
+      "id": "10",
+      "text": "Har musibat mein Allah ki hikmah chupi hai.",
+      "translation": "In every difficulty lies Allah's wisdom.",
+      "category": "sabr",
+      "source": "Islamic Teaching"
+    }
+  ]
+}

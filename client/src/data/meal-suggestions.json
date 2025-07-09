@@ -1,0 +1,132 @@
+{
+  "meals": [
+    {
+      "id": "anda_paratha",
+      "name": "Anda Paratha",
+      "type": "breakfast",
+      "ingredients": ["atta", "anda", "pyaz", "oil", "namak"],
+      "calories": 420,
+      "protein": 18,
+      "carbs": 45,
+      "fat": 16,
+      "cost": 80,
+      "preparationTime": 15
+    },
+    {
+      "id": "daal_chawal",
+      "name": "Daal Chawal",
+      "type": "lunch",
+      "ingredients": ["chawal", "masoor_daal", "pyaz", "lehsan", "adrak", "oil"],
+      "calories": 450,
+      "protein": 15,
+      "carbs": 75,
+      "fat": 8,
+      "cost": 90,
+      "preparationTime": 30
+    },
+    {
+      "id": "chicken_karahi",
+      "name": "Chicken Karahi",
+      "type": "dinner",
+      "ingredients": ["chicken", "tamatar", "pyaz", "adrak", "lehsan", "oil", "masale"],
+      "calories": 380,
+      "protein": 35,
+      "carbs": 12,
+      "fat": 22,
+      "cost": 200,
+      "preparationTime": 45
+    },
+    {
+      "id": "chai_biscuit",
+      "name": "Chai aur Biscuit",
+      "type": "snack",
+      "ingredients": ["chai_patti", "dudh", "cheeni", "biscuit"],
+      "calories": 180,
+      "protein": 4,
+      "carbs": 28,
+      "fat": 6,
+      "cost": 40,
+      "preparationTime": 10
+    },
+    {
+      "id": "roti_sabzi",
+      "name": "Roti aur Sabzi",
+      "type": "dinner",
+      "ingredients": ["atta", "seasonal_vegetables", "oil", "masale"],
+      "calories": 320,
+      "protein": 12,
+      "carbs": 55,
+      "fat": 8,
+      "cost": 70,
+      "preparationTime": 25
+    },
+    {
+      "id": "haleem",
+      "name": "Haleem",
+      "type": "lunch",
+      "ingredients": ["daal", "chicken", "wheat", "masale", "ghee"],
+      "calories": 520,
+      "protein": 28,
+      "carbs": 45,
+      "fat": 24,
+      "cost": 150,
+      "preparationTime": 60
+    },
+    {
+      "id": "fruit_yogurt",
+      "name": "Fruit aur Dahi",
+      "type": "snack",
+      "ingredients": ["dahi", "seasonal_fruits", "honey"],
+      "calories": 220,
+      "protein": 8,
+      "carbs": 35,
+      "fat": 6,
+      "cost": 60,
+      "preparationTime": 5
+    },
+    {
+      "id": "biryani",
+      "name": "Chicken Biryani",
+      "type": "lunch",
+      "ingredients": ["basmati_chawal", "chicken", "yogurt", "masale", "ghee"],
+      "calories": 680,
+      "protein": 32,
+      "carbs": 75,
+      "fat": 28,
+      "cost": 250,
+      "preparationTime": 90
+    }
+  ],
+  "ingredients": [
+    {"name": "atta", "costPerKg": 120, "protein": 12, "carbs": 70, "fat": 2},
+    {"name": "chawal", "costPerKg": 180, "protein": 7, "carbs": 80, "fat": 1},
+    {"name": "chicken", "costPerKg": 800, "protein": 25, "carbs": 0, "fat": 15},
+    {"name": "anda", "costPerDozen": 200, "protein": 13, "carbs": 1, "fat": 10},
+    {"name": "daal", "costPerKg": 300, "protein": 25, "carbs": 60, "fat": 2},
+    {"name": "oil", "costPerLiter": 450, "protein": 0, "carbs": 0, "fat": 100},
+    {"name": "dudh", "costPerLiter": 140, "protein": 3.5, "carbs": 5, "fat": 4},
+    {"name": "dahi", "costPerKg": 180, "protein": 4, "carbs": 6, "fat": 3}
+  ],
+  "weeklyMenus": [
+    {
+      "day": "Monday",
+      "budget": 350,
+      "meals": [
+        {"type": "breakfast", "mealId": "anda_paratha"},
+        {"type": "lunch", "mealId": "daal_chawal"}, 
+        {"type": "dinner", "mealId": "roti_sabzi"},
+        {"type": "snack", "mealId": "chai_biscuit"}
+      ]
+    },
+    {
+      "day": "Tuesday", 
+      "budget": 400,
+      "meals": [
+        {"type": "breakfast", "mealId": "anda_paratha"},
+        {"type": "lunch", "mealId": "haleem"},
+        {"type": "dinner", "mealId": "chicken_karahi"},
+        {"type": "snack", "mealId": "fruit_yogurt"}
+      ]
+    }
+  ]
+}
