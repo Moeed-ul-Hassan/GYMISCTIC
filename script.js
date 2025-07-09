@@ -10,6 +10,7 @@ let workoutTimer = null;
 let workoutTime = 0;
 let restTimer = null;
 let restTime = 60;
+let offlineStorage = null;
 
 // Islamic Quotes Data
 const islamicQuotes = [
@@ -134,6 +135,17 @@ const breathingModal = document.getElementById('breathing-modal');
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker registered:', registration);
+            })
+            .catch(error => {
+                console.error('Service Worker registration failed:', error);
+            });
+    }
+    
     // Show preloader animation
     setTimeout(() => {
         preloader.style.display = 'none';
@@ -142,12 +154,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 4000);
 });
 
-function initializeApp() {
+async function initializeApp() {
+    // Wait for offline storage to be ready
+    offlineStorage = window.gymisticStorage;
+    
+    // Initialize default data if needed
+    await initializeDefaultData();
+    
     // Set up navigation
     setupNavigation();
     
-    // Load daily quote
-    loadDailyQuote();
+    // Load daily quote from offline storage
+    await loadDailyQuote();
     
     // Initialize mood tracking
     initializeMoodTracking();
@@ -155,14 +173,81 @@ function initializeApp() {
     // Set up workout timer
     setupWorkoutTimer();
     
-    // Load meal data
-    loadMealData();
+    // Load meal data from offline storage
+    await loadMealData();
+    
+    // Load user preferences
+    await loadUserPreferences();
+    
+    // Load today's data
+    await loadTodaysData();
     
     // Update progress charts
     updateProgressCharts();
     
     // Show home page
     showPage('home');
+    
+    // Show offline capabilities
+    showOfflineCapabilities();
+    
+    // Setup offline indicator
+    setupOfflineIndicator();
+}
+
+// Setup offline indicator
+function setupOfflineIndicator() {
+    const offlineIndicator = document.getElementById('offline-indicator');
+    
+    // Show/hide offline indicator based on connection status
+    function updateOfflineIndicator() {
+        if (navigator.onLine) {
+            offlineIndicator.classList.add('hidden');
+        } else {
+            offlineIndicator.classList.remove('hidden');
+        }
+    }
+    
+    // Initial check
+    updateOfflineIndicator();
+    
+    // Listen for online/offline events
+    window.addEventListener('online', updateOfflineIndicator);
+    window.addEventListener('offline', updateOfflineIndicator);
+    
+    // Listen for service worker messages
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data.type === 'SYNC_COMPLETE') {
+                showNotification('Data synced successfully!', 'success');
+            }
+        });
+    }
+}
+
+// Initialize default data
+async function initializeDefaultData() {
+    try {
+        // Check if we already have quotes
+        const quotes = await offlineStorage.getIslamicQuotes();
+        if (quotes.length === 0) {
+            await offlineStorage.initializeDefaultData();
+        }
+    } catch (error) {
+        console.error('Error initializing default data:', error);
+    }
+}
+
+// Show offline capabilities notification
+function showOfflineCapabilities() {
+    const isOffline = !navigator.onLine;
+    const message = isOffline ? 
+        'App is ready for offline use! All data is saved locally.' :
+        'App is ready! Works offline with local data storage.';
+    
+    setTimeout(() => {
+        showNotification(message, 'success');
+    }, 1000);
 }
 
 // Navigation
@@ -206,16 +291,26 @@ function animatePageTransition() {
 }
 
 // Daily Quote
-function loadDailyQuote() {
-    const today = new Date().getDay();
-    const quote = islamicQuotes[today % islamicQuotes.length];
-    
-    document.getElementById('daily-quote').textContent = quote.text;
-    document.getElementById('quote-translation').textContent = quote.translation;
-    
-    // Animate quote appearance
-    const quoteCard = document.querySelector('.quote-card');
-    quoteCard.style.animation = 'slideUp 0.5s ease';
+async function loadDailyQuote() {
+    try {
+        const quotes = await offlineStorage.getIslamicQuotes();
+        const today = new Date().getDay();
+        const quote = quotes[today % quotes.length] || islamicQuotes[today % islamicQuotes.length];
+        
+        document.getElementById('daily-quote').textContent = quote.text || quote.romanUrdu;
+        document.getElementById('quote-translation').textContent = quote.translation;
+        
+        // Animate quote appearance
+        const quoteCard = document.querySelector('.quote-card');
+        quoteCard.style.animation = 'slideUp 0.5s ease';
+    } catch (error) {
+        console.error('Error loading daily quote:', error);
+        // Fallback to static quotes
+        const today = new Date().getDay();
+        const quote = islamicQuotes[today % islamicQuotes.length];
+        document.getElementById('daily-quote').textContent = quote.text;
+        document.getElementById('quote-translation').textContent = quote.translation;
+    }
 }
 
 // Mood Tracking
@@ -236,9 +331,25 @@ function initializeMoodTracking() {
     });
 }
 
-function saveMood(mood) {
+async function saveMood(mood) {
     const today = new Date().toISOString().split('T')[0];
-    localStorage.setItem(`mood_${today}`, mood);
+    
+    // Save to offline storage
+    const moodData = {
+        date: today,
+        mood: mood,
+        moodScore: getMoodScore(mood),
+        timestamp: new Date().toISOString()
+    };
+    
+    try {
+        await offlineStorage.saveMoodLog(moodData);
+        showNotification('Mood saved successfully!', 'success');
+    } catch (error) {
+        console.error('Error saving mood:', error);
+        // Fallback to localStorage
+        localStorage.setItem(`mood_${today}`, mood);
+    }
     
     // Update mood display
     const moodEmojis = {
@@ -254,6 +365,17 @@ function saveMood(mood) {
     if (moodStat && moodStat.textContent.match(/[😊😌😐😰😢]/)) {
         moodStat.textContent = moodEmojis[mood];
     }
+}
+
+function getMoodScore(mood) {
+    const scores = {
+        happy: 5,
+        good: 4,
+        neutral: 3,
+        stressed: 2,
+        sad: 1
+    };
+    return scores[mood] || 3;
 }
 
 // Workout Functions
@@ -328,18 +450,44 @@ function completeSet() {
     }
 }
 
-function saveSetData(reps, weight) {
+async function saveSetData(reps, weight) {
     const today = new Date().toISOString().split('T')[0];
     const setData = {
         date: today,
         reps: parseInt(reps),
         weight: parseFloat(weight),
-        exercise: document.getElementById('current-exercise-name').textContent
+        exercise: document.getElementById('current-exercise-name').textContent,
+        timestamp: new Date().toISOString(),
+        workoutType: 'push' // This would be dynamic based on current workout
     };
     
-    let workoutData = JSON.parse(localStorage.getItem('workoutData') || '[]');
-    workoutData.push(setData);
-    localStorage.setItem('workoutData', JSON.stringify(workoutData));
+    try {
+        // Get existing workout session for today or create new one
+        let workoutSession = await offlineStorage.getTodaysWorkout();
+        
+        if (!workoutSession) {
+            workoutSession = {
+                date: today,
+                type: 'push',
+                sets: [],
+                startTime: new Date().toISOString(),
+                completed: false
+            };
+        }
+        
+        // Add set to workout session
+        workoutSession.sets.push(setData);
+        workoutSession.updatedAt = new Date().toISOString();
+        
+        await offlineStorage.saveWorkoutSession(workoutSession);
+        showNotification('Set saved successfully!', 'success');
+    } catch (error) {
+        console.error('Error saving set data:', error);
+        // Fallback to localStorage
+        let workoutData = JSON.parse(localStorage.getItem('workoutData') || '[]');
+        workoutData.push(setData);
+        localStorage.setItem('workoutData', JSON.stringify(workoutData));
+    }
 }
 
 function showRestTimer() {
@@ -534,102 +682,324 @@ function showCompletionMessage() {
 }
 
 // Meal Functions
-function loadMealData() {
-    // This would typically load from localStorage or API
-    // For now, we'll use the static data
-    updateMealDisplay();
+async function loadMealData() {
+    try {
+        // Load today's meal plan from offline storage
+        const todaysMealPlan = await offlineStorage.getTodaysMealPlan();
+        
+        if (todaysMealPlan) {
+            updateMealDisplay(todaysMealPlan);
+        } else {
+            // Generate new meal plan for today
+            await generateTodaysMealPlan();
+        }
+    } catch (error) {
+        console.error('Error loading meal data:', error);
+        // Fallback to static data
+        updateMealDisplay();
+    }
 }
 
-function updateMealDisplay() {
-    // Update meal cards with current data
+async function generateTodaysMealPlan() {
+    const today = new Date().toISOString().split('T')[0];
+    const dailyBudget = 1000; // PKR
+    
+    const mealPlan = {
+        date: today,
+        dailyBudget: dailyBudget,
+        meals: {
+            breakfast: mealData.breakfast[0],
+            lunch: mealData.lunch[0],
+            dinner: mealData.dinner[0],
+            snack: mealData.snack[0]
+        },
+        totalCalories: 0,
+        totalCost: 0
+    };
+    
+    // Calculate totals
+    Object.values(mealPlan.meals).forEach(meal => {
+        mealPlan.totalCalories += meal.calories;
+        mealPlan.totalCost += meal.cost;
+    });
+    
+    try {
+        await offlineStorage.saveMealPlan(mealPlan);
+        updateMealDisplay(mealPlan);
+        showNotification('Today\'s meal plan generated!', 'success');
+    } catch (error) {
+        console.error('Error saving meal plan:', error);
+        updateMealDisplay();
+    }
+}
+
+function updateMealDisplay(mealPlan = null) {
     const mealSections = document.querySelectorAll('.meal-section');
     
     mealSections.forEach(section => {
         const mealType = section.querySelector('h3').textContent.toLowerCase();
         const mealCard = section.querySelector('.meal-card');
+        const mealInfo = mealCard.querySelector('.meal-info');
         
-        if (mealData[mealType] && mealData[mealType].length > 0) {
-            const meal = mealData[mealType][0]; // Get first meal as example
-            const mealInfo = mealCard.querySelector('.meal-info');
-            
+        let meal;
+        if (mealPlan && mealPlan.meals[mealType]) {
+            meal = mealPlan.meals[mealType];
+        } else if (mealData[mealType] && mealData[mealType].length > 0) {
+            meal = mealData[mealType][0];
+        }
+        
+        if (meal) {
             mealInfo.innerHTML = `
                 <h4>${meal.name}</h4>
                 <p>${meal.calories} calories • PKR ${meal.cost}</p>
             `;
         }
     });
+    
+    // Update budget display
+    if (mealPlan) {
+        const budgetUsed = document.querySelector('.budget-used');
+        if (budgetUsed) {
+            budgetUsed.textContent = `Used: PKR ${mealPlan.totalCost}`;
+        }
+    }
 }
 
 // Progress Functions
-function updateProgressCharts() {
-    // Update weight chart (simplified)
-    const weightChart = document.getElementById('weight-chart');
-    if (weightChart) {
-        const ctx = weightChart.getContext('2d');
+async function updateProgressCharts() {
+    try {
+        // Get data from offline storage
+        const bodyStats = await offlineStorage.getBodyStats();
+        const workoutSessions = await offlineStorage.getWorkoutSessions();
+        const moodLogs = await offlineStorage.getMoodLogs();
         
-        // Simple line chart simulation
-        ctx.clearRect(0, 0, weightChart.width, weightChart.height);
-        ctx.strokeStyle = '#00ff88';
-        ctx.lineWidth = 2;
-        
-        ctx.beginPath();
-        ctx.moveTo(0, 100);
-        ctx.lineTo(50, 90);
-        ctx.lineTo(100, 85);
-        ctx.lineTo(150, 80);
-        ctx.lineTo(200, 75);
-        ctx.lineTo(250, 70);
-        ctx.lineTo(300, 65);
-        ctx.stroke();
-        
-        // Add dots
-        ctx.fillStyle = '#00ff88';
-        [0, 50, 100, 150, 200, 250, 300].forEach((x, i) => {
-            const y = 100 - (i * 5);
+        // Update weight chart with real data
+        const weightChart = document.getElementById('weight-chart');
+        if (weightChart && bodyStats.length > 0) {
+            const ctx = weightChart.getContext('2d');
+            ctx.clearRect(0, 0, weightChart.width, weightChart.height);
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            
+            // Use actual weight data
+            const weights = bodyStats.slice(0, 7).reverse(); // Last 7 entries
+            const maxWeight = Math.max(...weights.map(s => s.weight));
+            const minWeight = Math.min(...weights.map(s => s.weight));
+            const range = maxWeight - minWeight || 1;
+            
             ctx.beginPath();
-            ctx.arc(x, y, 3, 0, 2 * Math.PI);
-            ctx.fill();
+            weights.forEach((stat, i) => {
+                const x = (i * (weightChart.width / (weights.length - 1))) || 0;
+                const y = weightChart.height - ((stat.weight - minWeight) / range) * (weightChart.height - 20) - 10;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // Add dots for data points
+            ctx.fillStyle = '#00ff88';
+            weights.forEach((stat, i) => {
+                const x = (i * (weightChart.width / (weights.length - 1))) || 0;
+                const y = weightChart.height - ((stat.weight - minWeight) / range) * (weightChart.height - 20) - 10;
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+        }
+        
+        // Update progress stats
+        updateProgressStats(bodyStats, workoutSessions, moodLogs);
+        
+    } catch (error) {
+        console.error('Error updating progress charts:', error);
+        // Fallback to basic chart
+        const weightChart = document.getElementById('weight-chart');
+        if (weightChart) {
+            const ctx = weightChart.getContext('2d');
+            ctx.clearRect(0, 0, weightChart.width, weightChart.height);
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 100);
+            ctx.lineTo(50, 90);
+            ctx.lineTo(100, 85);
+            ctx.lineTo(150, 80);
+            ctx.lineTo(200, 75);
+            ctx.lineTo(250, 70);
+            ctx.lineTo(300, 65);
+            ctx.stroke();
+            
+            // Add dots
+            ctx.fillStyle = '#00ff88';
+            [0, 50, 100, 150, 200, 250, 300].forEach((x, i) => {
+                const y = 100 - (i * 5);
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+        }
+    }
+}
+
+function updateProgressStats(bodyStats, workoutSessions, moodLogs) {
+    // Update weight progress
+    const weightProgress = document.querySelector('.weight-progress');
+    if (weightProgress && bodyStats.length > 0) {
+        const latest = bodyStats[0];
+        const previous = bodyStats[1];
+        if (previous) {
+            const change = latest.weight - previous.weight;
+            const symbol = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+            weightProgress.textContent = `${previous.weight}kg ${symbol} ${latest.weight}kg`;
+        } else {
+            weightProgress.textContent = `${latest.weight}kg`;
+        }
+    }
+    
+    // Update workout streak
+    const workoutStreak = document.querySelector('.workout-streak');
+    if (workoutStreak) {
+        const streak = calculateWorkoutStreak(workoutSessions);
+        workoutStreak.textContent = `${streak} days`;
+    }
+    
+    // Update mood trend
+    const moodTrend = document.querySelector('.mood-trend');
+    if (moodTrend && moodLogs.length > 0) {
+        const averageMood = moodLogs.reduce((sum, log) => sum + log.moodScore, 0) / moodLogs.length;
+        const moodText = averageMood > 4 ? 'Excellent' : averageMood > 3 ? 'Good' : averageMood > 2 ? 'Fair' : 'Needs Attention';
+        moodTrend.textContent = moodText;
+    }
+    
+    // Update progress bars
+    updateProgressBars(bodyStats, workoutSessions, moodLogs);
+}
+
+function calculateWorkoutStreak(workoutSessions) {
+    if (workoutSessions.length === 0) return 0;
+    
+    const today = new Date();
+    let streak = 0;
+    
+    for (let i = 0; i < 30; i++) {
+        const checkDate = new Date(today);
+        checkDate.setDate(today.getDate() - i);
+        const dateString = checkDate.toISOString().split('T')[0];
+        
+        const hasWorkout = workoutSessions.some(session => session.date === dateString);
+        
+        if (hasWorkout) {
+            streak++;
+        } else if (i === 0) {
+            // If no workout today, check yesterday
+            continue;
+        } else {
+            break;
+        }
+    }
+    
+    return streak;
+}
+
+function updateProgressBars(bodyStats, workoutSessions, moodLogs) {
+    // Update workout frequency
+    const workoutFrequencyBar = document.querySelector('.workout-frequency-bar');
+    if (workoutFrequencyBar) {
+        const thisWeekSessions = workoutSessions.filter(session => {
+            const sessionDate = new Date(session.date);
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            return sessionDate >= weekAgo;
         });
+        
+        const progress = Math.min((thisWeekSessions.length / 4) * 100, 100); // Target: 4 sessions per week
+        workoutFrequencyBar.style.width = progress + '%';
+    }
+    
+    // Update mood consistency
+    const moodConsistencyBar = document.querySelector('.mood-consistency-bar');
+    if (moodConsistencyBar && moodLogs.length > 0) {
+        const recentMoods = moodLogs.slice(0, 7); // Last 7 days
+        const averageMood = recentMoods.reduce((sum, log) => sum + log.moodScore, 0) / recentMoods.length;
+        const progress = (averageMood / 5) * 100;
+        moodConsistencyBar.style.width = progress + '%';
     }
 }
 
 // Settings Functions
-function initializeSettings() {
-    // Load user preferences
-    loadUserPreferences();
+async function initializeSettings() {
+    // Load user preferences from offline storage
+    await loadUserPreferences();
     
     // Setup toggle switches
     setupToggleSwitches();
     
     // Setup budget calculation
     setupBudgetCalculation();
+    
+    // Setup data management
+    setupDataManagement();
 }
 
-function loadUserPreferences() {
-    const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-    
-    // Set form values
-    Object.keys(preferences).forEach(key => {
-        const element = document.querySelector(`[name="${key}"]`);
-        if (element) {
-            if (element.type === 'checkbox') {
-                element.checked = preferences[key];
-            } else {
-                element.value = preferences[key];
-            }
+async function loadUserPreferences() {
+    try {
+        const preferences = await offlineStorage.getUserPreferences();
+        
+        if (preferences) {
+            // Set form values
+            Object.keys(preferences).forEach(key => {
+                const element = document.querySelector(`[name="${key}"]`);
+                if (element) {
+                    if (element.type === 'checkbox') {
+                        element.checked = preferences[key];
+                    } else {
+                        element.value = preferences[key];
+                    }
+                }
+            });
         }
-    });
+    } catch (error) {
+        console.error('Error loading user preferences:', error);
+        // Fallback to localStorage
+        const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+        Object.keys(preferences).forEach(key => {
+            const element = document.querySelector(`[name="${key}"]`);
+            if (element) {
+                if (element.type === 'checkbox') {
+                    element.checked = preferences[key];
+                } else {
+                    element.value = preferences[key];
+                }
+            }
+        });
+    }
 }
 
 function setupToggleSwitches() {
     const toggles = document.querySelectorAll('.toggle-switch input');
     
     toggles.forEach(toggle => {
-        toggle.addEventListener('change', function() {
+        toggle.addEventListener('change', async function() {
             const setting = this.id.replace('-', '_');
-            const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-            preferences[setting] = this.checked;
-            localStorage.setItem('userPreferences', JSON.stringify(preferences));
+            
+            try {
+                let preferences = await offlineStorage.getUserPreferences() || {};
+                preferences[setting] = this.checked;
+                await offlineStorage.saveUserPreferences(preferences);
+                
+                showNotification('Settings saved successfully!', 'success');
+            } catch (error) {
+                console.error('Error saving preferences:', error);
+                // Fallback to localStorage
+                const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+                preferences[setting] = this.checked;
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+            }
             
             // Animate toggle
             this.parentElement.style.animation = 'pulse 0.3s ease';
@@ -646,6 +1016,172 @@ function setupBudgetCalculation() {
             const daily = Math.round(this.value / 30);
             dailyBudget.value = daily;
         });
+    }
+}
+
+function setupDataManagement() {
+    // Add data management section to settings
+    const settingsContainer = document.querySelector('.settings-sections');
+    
+    // Only add if not already present
+    if (settingsContainer && !document.querySelector('.data-management-section')) {
+        const dataManagementSection = document.createElement('div');
+        dataManagementSection.className = 'settings-section data-management-section';
+        dataManagementSection.innerHTML = `
+            <h3>Data Management</h3>
+            <div class="data-management-actions">
+                <button class="data-action-btn" onclick="exportData()">
+                    <i class="fas fa-download"></i>
+                    Export Data
+                </button>
+                <button class="data-action-btn" onclick="importData()">
+                    <i class="fas fa-upload"></i>
+                    Import Data
+                </button>
+                <button class="data-action-btn" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i>
+                    Clear All Data
+                </button>
+                <button class="data-action-btn" onclick="showStorageUsage()">
+                    <i class="fas fa-info-circle"></i>
+                    Storage Usage
+                </button>
+            </div>
+            <div class="storage-info" id="storage-info"></div>
+            <input type="file" id="import-file" accept=".json" style="display: none;">
+        `;
+        
+        settingsContainer.appendChild(dataManagementSection);
+    }
+}
+
+// Data Management Functions
+async function exportData() {
+    try {
+        const exportData = await offlineStorage.exportAllData();
+        const blob = new Blob([exportData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `gymistic-data-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        URL.revokeObjectURL(url);
+        showNotification('Data exported successfully!', 'success');
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        showNotification('Error exporting data!', 'error');
+    }
+}
+
+function importData() {
+    const fileInput = document.getElementById('import-file');
+    fileInput.click();
+    
+    fileInput.onchange = async function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        try {
+            const text = await file.text();
+            await offlineStorage.importAllData(text);
+            showNotification('Data imported successfully!', 'success');
+            
+            // Refresh the app with new data
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } catch (error) {
+            console.error('Error importing data:', error);
+            showNotification('Error importing data!', 'error');
+        }
+    };
+}
+
+async function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+        try {
+            await offlineStorage.clearAllData();
+            localStorage.clear();
+            showNotification('All data cleared successfully!', 'success');
+            
+            // Reload the app
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } catch (error) {
+            console.error('Error clearing data:', error);
+            showNotification('Error clearing data!', 'error');
+        }
+    }
+}
+
+async function showStorageUsage() {
+    try {
+        const usage = await offlineStorage.getStorageUsage();
+        const storageInfo = document.getElementById('storage-info');
+        
+        if (usage) {
+            storageInfo.innerHTML = `
+                <div class="storage-usage">
+                    <h4>Storage Usage</h4>
+                    <p><strong>Used:</strong> ${usage.usedMB} MB of ${usage.quotaMB} MB</p>
+                    <p><strong>Available:</strong> ${usage.quotaMB - usage.usedMB} MB</p>
+                    <div class="usage-bar">
+                        <div class="usage-fill" style="width: ${usage.usagePercentage}%"></div>
+                    </div>
+                    <p><small>Usage: ${usage.usagePercentage}%</small></p>
+                </div>
+            `;
+        } else {
+            storageInfo.innerHTML = '<p>Storage usage information not available.</p>';
+        }
+    } catch (error) {
+        console.error('Error getting storage usage:', error);
+        showNotification('Error getting storage usage!', 'error');
+    }
+}
+
+// Load today's data
+async function loadTodaysData() {
+    try {
+        // Load today's mood
+        const todaysMood = await offlineStorage.getTodaysMood();
+        if (todaysMood) {
+            const moodButtons = document.querySelectorAll('.mood-btn');
+            moodButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.mood === todaysMood.mood) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // Load today's calories
+        const todaysCalories = await offlineStorage.getTodaysCalories();
+        if (todaysCalories) {
+            // Update calorie display
+            const caloriesElement = document.getElementById('calories-consumed');
+            if (caloriesElement) {
+                caloriesElement.textContent = todaysCalories.consumed || 0;
+            }
+        }
+        
+        // Load today's workout
+        const todaysWorkout = await offlineStorage.getTodaysWorkout();
+        if (todaysWorkout) {
+            // Update workout progress
+            const progressPercentage = (todaysWorkout.sets.length / 16) * 100; // Assuming 16 sets total
+            const progressElement = document.querySelector('.workout-progress-bar .progress-fill');
+            if (progressElement) {
+                progressElement.style.width = Math.min(progressPercentage, 100) + '%';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading today\'s data:', error);
     }
 }
 

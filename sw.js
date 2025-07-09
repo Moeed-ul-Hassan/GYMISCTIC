@@ -1,11 +1,12 @@
 // Service Worker for GYMistic - Offline Islamic Fitness App
 
-const CACHE_NAME = 'gymistic-v1';
+const CACHE_NAME = 'gymistic-v2';
 const urlsToCache = [
     '/',
     '/index.html',
     '/styles.css',
     '/script.js',
+    '/offline-storage.js',
     'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Amiri:wght@400;700&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
@@ -58,9 +59,23 @@ self.addEventListener('sync', function(event) {
     }
 });
 
-function doBackgroundSync() {
-    // Future: sync workout data, meal plans, etc.
-    return Promise.resolve();
+async function doBackgroundSync() {
+    try {
+        console.log('SW: Background sync started');
+        
+        // Notify main thread about sync completion
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+            client.postMessage({
+                type: 'SYNC_COMPLETE',
+                message: 'Background sync completed'
+            });
+        });
+        
+        console.log('SW: Background sync completed');
+    } catch (error) {
+        console.error('SW: Background sync failed:', error);
+    }
 }
 
 // Push notifications for future features
