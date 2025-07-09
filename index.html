@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYMistic - Islamic Fitness App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="logo-container">
+                <h1 class="logo">GYMistic</h1>
+                <p class="logo-subtitle">Islamic Fitness Journey</p>
+            </div>
+            <div class="loading-animation">
+                <div class="islamic-pattern"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p class="loading-text">Bismillah - Starting your fitness journey...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">GYMistic</h1>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="profile-btn">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <!-- Daily Quote Card -->
+                <div class="quote-card">
+                    <div class="quote-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="quote-text" id="daily-quote">La hawla wa la quwwata illa billah</p>
+                        <p class="quote-translation" id="quote-translation">There is no power except with Allah</p>
+                    </div>
+                    <div class="quote-gradient"></div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value" id="calories-consumed">1,247</h3>
+                            <p class="stat-label">Calories Today</p>
+                            <div class="stat-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 62%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">4/7</h3>
+                            <p class="stat-label">Workouts This Week</p>
+                            <div class="stat-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 57%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">😊</h3>
+                            <p class="stat-label">Today's Mood</p>
+                            <div class="stat-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">PKR 450</h3>
+                            <p class="stat-label">Meal Budget Used</p>
+                            <div class="stat-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Workout -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Today's Workout</h2>
+                        <button class="section-action" onclick="startWorkout()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="workout-preview">
+                        <div class="workout-info">
+                            <h3>Push Day - Chest & Triceps</h3>
+                            <p>6 exercises • 45 minutes</p>
+                        </div>
+                        <div class="workout-progress">
+                            <div class="circular-progress">
+                                <svg class="progress-ring" width="60" height="60">
+                                    <circle class="progress-ring-circle" cx="30" cy="30" r="25" stroke="#00FF88" stroke-width="3" fill="transparent" stroke-dasharray="157" stroke-dashoffset="47"></circle>
+                                </svg>
+                                <div class="progress-text">70%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mental Fitness -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2>Mental Fitness</h2>
+                        <button class="section-action" onclick="openBreathingTimer()">
+                            <i class="fas fa-leaf"></i>
+                        </button>
+                    </div>
+                    <div class="mental-fitness-content">
+                        <div class="breathing-card" onclick="openBreathingTimer()">
+                            <div class="breathing-icon">
+                                <i class="fas fa-wind"></i>
+                            </div>
+                            <div class="breathing-info">
+                                <h3>4-4-4 Breathing</h3>
+                                <p>Relax with Islamic dhikr</p>
+                            </div>
+                        </div>
+                        <div class="mood-tracker">
+                            <p>How are you feeling today?</p>
+                            <div class="mood-options">
+                                <button class="mood-btn" data-mood="happy">😊</button>
+                                <button class="mood-btn" data-mood="good">😌</button>
+                                <button class="mood-btn" data-mood="neutral">😐</button>
+                                <button class="mood-btn" data-mood="stressed">😰</button>
+                                <button class="mood-btn active" data-mood="sad">😢</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Page -->
+            <div id="workout-page" class="page">
+                <div class="workout-header">
+                    <h2>Push Day Workout</h2>
+                    <div class="workout-timer">
+                        <div class="timer-display">
+                            <span id="workout-time">15:30</span>
+                        </div>
+                        <button class="timer-control" id="timer-btn">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="current-exercise">
+                    <div class="exercise-info">
+                        <h3 id="current-exercise-name">Bench Press</h3>
+                        <p>Set 2 of 4 • 8-10 reps</p>
+                    </div>
+                    <div class="exercise-demo">
+                        <div class="demo-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <p>Tap to view demo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="set-tracker">
+                    <div class="set-input">
+                        <label>Reps</label>
+                        <input type="number" id="reps-input" value="8" min="1" max="50">
+                    </div>
+                    <div class="set-input">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="weight-input" value="60" min="0" step="0.5">
+                    </div>
+                    <button class="complete-set-btn" onclick="completeSet()">
+                        <i class="fas fa-check"></i>
+                        Complete Set
+                    </button>
+                </div>
+
+                <div class="rest-timer hidden" id="rest-timer">
+                    <div class="rest-content">
+                        <div class="rest-circle">
+                            <div class="rest-time" id="rest-time">60</div>
+                            <div class="rest-label">Rest Time</div>
+                        </div>
+                        <div class="motivation-quote">
+                            <p id="rest-quote">"Sabr ka phal meetha hota hai"</p>
+                            <small>Patience brings sweet results</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workout-progress-bar">
+                    <div class="progress-fill" style="width: 40%"></div>
+                </div>
+            </div>
+
+            <!-- Meals Page -->
+            <div id="meals-page" class="page">
+                <div class="meals-header">
+                    <h2>Meal Planner</h2>
+                    <div class="budget-display">
+                        <span>Daily Budget: PKR 1,000</span>
+                        <span class="budget-used">Used: PKR 450</span>
+                    </div>
+                </div>
+
+                <div class="meal-sections">
+                    <div class="meal-section">
+                        <h3>Breakfast</h3>
+                        <div class="meal-card">
+                            <div class="meal-info">
+                                <h4>Aloo Paratha with Dahi</h4>
+                                <p>480 calories • PKR 80</p>
+                            </div>
+                            <div class="meal-status">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="meal-section">
+                        <h3>Lunch</h3>
+                        <div class="meal-card">
+                            <div class="meal-info">
+                                <h4>Chicken Karahi with Rice</h4>
+                                <p>650 calories • PKR 200</p>
+                            </div>
+                            <div class="meal-status">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="meal-section">
+                        <h3>Dinner</h3>
+                        <div class="meal-card suggested">
+                            <div class="meal-info">
+                                <h4>Daal Chawal with Salad</h4>
+                                <p>420 calories • PKR 120</p>
+                            </div>
+                            <div class="meal-actions">
+                                <button class="meal-action-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="meal-section">
+                        <h3>Snack</h3>
+                        <div class="meal-card suggested">
+                            <div class="meal-info">
+                                <h4>Mixed Nuts (30g)</h4>
+                                <p>180 calories • PKR 50</p>
+                            </div>
+                            <div class="meal-actions">
+                                <button class="meal-action-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Page -->
+            <div id="progress-page" class="page">
+                <div class="progress-header">
+                    <h2>Your Progress</h2>
+                    <div class="progress-period">
+                        <select id="progress-period">
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <h3>Weight Progress</h3>
+                            <span class="progress-change">-2.5 kg</span>
+                        </div>
+                        <div class="progress-chart">
+                            <canvas id="weight-chart" width="300" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <h3>Calorie Tracking</h3>
+                            <span class="progress-change">Avg: 1,850</span>
+                        </div>
+                        <div class="calorie-ring">
+                            <div class="ring-progress" data-progress="75">
+                                <div class="ring-text">
+                                    <span class="ring-value">1,480</span>
+                                    <span class="ring-label">/ 1,970</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body-stats">
+                    <h3>Body Measurements</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <label>Weight (kg)</label>
+                            <input type="number" value="75.5" step="0.1">
+                        </div>
+                        <div class="stat-item">
+                            <label>Chest (cm)</label>
+                            <input type="number" value="102" step="0.1">
+                        </div>
+                        <div class="stat-item">
+                            <label>Waist (cm)</label>
+                            <input type="number" value="85" step="0.1">
+                        </div>
+                        <div class="stat-item">
+                            <label>Arms (cm)</label>
+                            <input type="number" value="38" step="0.1">
+                        </div>
+                    </div>
+                    <button class="save-stats-btn">
+                        <i class="fas fa-save"></i>
+                        Save Measurements
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="settings-sections">
+                    <div class="settings-section">
+                        <h3>Personal Information</h3>
+                        <div class="setting-item">
+                            <label>Name</label>
+                            <input type="text" value="Ahmed Khan">
+                        </div>
+                        <div class="setting-item">
+                            <label>Age</label>
+                            <input type="number" value="28">
+                        </div>
+                        <div class="setting-item">
+                            <label>Height (cm)</label>
+                            <input type="number" value="175">
+                        </div>
+                        <div class="setting-item">
+                            <label>Goal</label>
+                            <select>
+                                <option>Lose Weight</option>
+                                <option selected>Build Muscle</option>
+                                <option>Maintain</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Notifications</h3>
+                        <div class="setting-toggle">
+                            <label>Workout Reminders</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="workout-reminders" checked>
+                                <label for="workout-reminders"></label>
+                            </div>
+                        </div>
+                        <div class="setting-toggle">
+                            <label>Dhikr Reminders</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="dhikr-reminders">
+                                <label for="dhikr-reminders"></label>
+                            </div>
+                        </div>
+                        <div class="setting-toggle">
+                            <label>Voice Motivation</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="voice-motivation" checked>
+                                <label for="voice-motivation"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Budget Settings</h3>
+                        <div class="setting-item">
+                            <label>Monthly Budget (PKR)</label>
+                            <input type="number" value="30000">
+                        </div>
+                        <div class="setting-item">
+                            <label>Daily Budget (PKR)</label>
+                            <input type="number" value="1000" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-page="workout">
+                <i class="fas fa-dumbbell"></i>
+                <span>Workout</span>
+            </button>
+            <button class="nav-btn" data-page="meals">
+                <i class="fas fa-utensils"></i>
+                <span>Meals</span>
+            </button>
+            <button class="nav-btn" data-page="progress">
+                <i class="fas fa-chart-line"></i>
+                <span>Progress</span>
+            </button>
+            <button class="nav-btn" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Breathing Timer Modal -->
+    <div id="breathing-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>4-4-4 Breathing Exercise</h3>
+                <button class="close-btn" onclick="closeBreathingTimer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="breathing-container">
+                <div class="breathing-circle" id="breathing-circle">
+                    <div class="breathing-text">
+                        <div class="breath-phase" id="breath-phase">Breathe In</div>
+                        <div class="breath-count" id="breath-count">4</div>
+                    </div>
+                </div>
+                <div class="dhikr-text" id="dhikr-text">
+                    <p>La hawla wa la quwwata illa billah</p>
+                    <small>There is no power except with Allah</small>
+                </div>
+                <div class="breathing-controls">
+                    <button class="breathing-btn" id="start-breathing" onclick="startBreathingExercise()">
+                        <i class="fas fa-play"></i>
+                        Start
+                    </button>
+                    <button class="breathing-btn hidden" id="stop-breathing" onclick="stopBreathingExercise()">
+                        <i class="fas fa-stop"></i>
+                        Stop
+                    </button>
+                </div>
+                <div class="breathing-progress">
+                    <div class="cycle-counter">Cycle: <span id="cycle-count">0</span>/5</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="breathing-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
